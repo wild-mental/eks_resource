@@ -1,0 +1,404 @@
+Metadata:
+  AWSToolsMetrics:
+    IaC_Generator: arn:aws:cloudformation:ap-northeast-2:196768121030:generatedTemplate/c29a845f-014a-42a5-b6f0-ae67ab626a41
+Resources:
+  EC2InternetGateway00igw0f6974aa43989d5ba00flPN5:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::InternetGateway
+    DeletionPolicy: Retain
+    Properties:
+      Tags:
+        - Value: eks-practice-igw
+          Key: Name
+  EC2RouteTable00rtb058a35d869e8ecebd00YQyuy:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::RouteTable
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+  EC2EIP00432009112600YhkvF:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::EIP
+    DeletionPolicy: Retain
+    Properties:
+      PublicIpv4Pool: amazon
+      Domain: vpc
+      Tags:
+        - Value: eks-practice-eip02
+          Key: Name
+      NetworkBorderGroup: ap-northeast-2
+  EC2RouteTable00rtb032650838288a20b900Cfpjg:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::RouteTable
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      Tags:
+        - Value: eks-practice-rt-pri02
+          Key: Name
+  EC2SubnetNetworkAclAssociation00aclassoc0db85294c26e3c51c00vEGQN:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    DeletionPolicy: Retain
+    Properties:
+      NetworkAclId: !Ref EC2NetworkAcl00acl0cfc643d8d0e79a3f002Cu8n
+      SubnetId: !Ref EC2Subnet00subnet01e7ca9754ffcb64800s2z4X
+  EC2RouteTable00rtb0484687d77e9312e800tpdm8:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::RouteTable
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      Tags:
+        - Value: eks-practice-rt-pub
+          Key: Name
+  EC2EIP00339817700pcbAk:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::EIP
+    DeletionPolicy: Retain
+    Properties:
+      PublicIpv4Pool: amazon
+      Domain: vpc
+      Tags:
+        - Value: eks-practice-eip01
+          Key: Name
+      NetworkBorderGroup: ap-northeast-2
+  EC2SubnetRouteTableAssociation00rtbassoc0325440fa0dcd14d900Z8YEY:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb0470cb2d39aa8dda700IXEQ3
+      SubnetId: !Ref EC2Subnet00subnet01e7ca9754ffcb64800s2z4X
+  EC2DHCPOptions00dopt0d28ff6600b0Sdn:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::DHCPOptions
+    DeletionPolicy: Retain
+    Properties:
+      DomainName: ap-northeast-2.compute.internal
+      DomainNameServers:
+        - AmazonProvidedDNS
+      Tags: []
+  EC2SubnetRouteTableAssociation00rtbassoc0e4b47766a65a58a70056yOM:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb0484687d77e9312e800tpdm8
+      SubnetId: !Ref EC2Subnet00subnet007b07aa62aaf2aa300CZ1U7
+  EC2Subnet00subnet01e7ca9754ffcb64800s2z4X:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Subnet
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      MapPublicIpOnLaunch: false
+      EnableDns64: false
+      AvailabilityZoneId: apne2-az1
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: ip-name
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: 10.0.64.0/20
+      Ipv6Native: false
+      Tags:
+        - Value: eks-practice-pri01
+          Key: Name
+  EC2SubnetRouteTableAssociation00rtbassoc058027191645703da00QNN2e:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb032650838288a20b900Cfpjg
+      SubnetId: !Ref EC2Subnet00subnet0548a083f1b638c4a00TorbM
+  EC2EIPAssociation00eipassoc0abebee830a5813d700x6dBl:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::EIPAssociation
+    DeletionPolicy: Retain
+    Properties:
+      PrivateIpAddress: !GetAtt EC2NetworkInterface00eni052c04473bdc3711f00kEnrX.PrimaryPrivateIpAddress
+      NetworkInterfaceId: !Ref EC2NetworkInterface00eni052c04473bdc3711f00kEnrX
+      EIP: !GetAtt EC2EIP00339817700pcbAk.PublicIp
+      AllocationId: !GetAtt EC2EIP00339817700pcbAk.AllocationId
+  EC2NatGateway00nat03c777455828394c000XFqOZ:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::NatGateway
+    DeletionPolicy: Retain
+    Properties:
+      PrivateIpAddress: 10.0.38.106
+      ConnectivityType: public
+      VpcId: vpc-0908172863f954278
+      EniId: eni-0aebeeaf81ca8de7e
+      AllocationId: !GetAtt EC2EIP00432009112600YhkvF.AllocationId
+      SubnetId: !Ref EC2Subnet00subnet08ed0f8b075be842900440FV
+      Tags:
+        - Value: eks-practice-ngw02
+          Key: Name
+  EC2Route00rtb0484687d77e9312e800INPfn:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Route
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb0484687d77e9312e800tpdm8
+      DestinationCidrBlock: !GetAtt EC2VPC00vpc0908172863f95427800DPWAP.CidrBlock
+      GatewayId: local
+      VpcEndpointId: local
+  EC2Route00rtb0470cb2d39aa8dda700QUXiX:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Route
+    DeletionPolicy: Retain
+    Properties:
+      NatGatewayId: !Ref EC2NatGateway00nat086912ab949e3ca8300IQK46
+      RouteTableId: !Ref EC2RouteTable00rtb0470cb2d39aa8dda700IXEQ3
+      DestinationCidrBlock: 0.0.0.0/0
+  Route53ResolverResolverRuleAssociation00rslvrautodefinedassocvpc0908172863f954278internetresolver00yl2Yu:
+    UpdateReplacePolicy: Retain
+    Type: AWS::Route53Resolver::ResolverRuleAssociation
+    DeletionPolicy: Retain
+    Properties:
+      VPCId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      ResolverRuleId: rslvr-autodefined-rr-internet-resolver
+      Name: System Rule Association
+  EC2SubnetRouteTableAssociation00rtbassoc08e63381687fe969b004KBMr:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb0484687d77e9312e800tpdm8
+      SubnetId: !Ref EC2Subnet00subnet08ed0f8b075be842900440FV
+  EC2SecurityGroup00sg0b25c777e5c2a251200ve0rG:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SecurityGroup
+    DeletionPolicy: Retain
+    Properties:
+      GroupDescription: default VPC security group
+      GroupName: default
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      SecurityGroupIngress:
+        - IpProtocol: '-1'
+          FromPort: -1
+          SourceSecurityGroupId: !GetAtt EC2VPC00vpc0908172863f95427800DPWAP.DefaultSecurityGroup
+          ToPort: -1
+          SourceSecurityGroupOwnerId: '196768121030'
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: '-1'
+          FromPort: -1
+          ToPort: -1
+  EC2Route00rtb0484687d77e9312e8003T1Bo:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Route
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb0484687d77e9312e800tpdm8
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref EC2InternetGateway00igw0f6974aa43989d5ba00flPN5
+      VpcEndpointId: igw-0f6974aa43989d5ba
+  EC2Route00rtb032650838288a20b900GvRgC:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Route
+    DeletionPolicy: Retain
+    Properties:
+      NatGatewayId: !Ref EC2NatGateway00nat03c777455828394c000XFqOZ
+      RouteTableId: !Ref EC2RouteTable00rtb032650838288a20b900Cfpjg
+      DestinationCidrBlock: 0.0.0.0/0
+  EC2NatGateway00nat086912ab949e3ca8300IQK46:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::NatGateway
+    DeletionPolicy: Retain
+    Properties:
+      PrivateIpAddress: 10.0.18.177
+      ConnectivityType: public
+      VpcId: vpc-0908172863f954278
+      EniId: eni-052c04473bdc3711f
+      AllocationId: !GetAtt EC2EIP00339817700pcbAk.AllocationId
+      SubnetId: !Ref EC2Subnet00subnet007b07aa62aaf2aa300CZ1U7
+      Tags:
+        - Value: eks-practice-ngw01
+          Key: Name
+  EC2SubnetNetworkAclAssociation00aclassoc028d2e62195fe78da00JzWmi:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    DeletionPolicy: Retain
+    Properties:
+      NetworkAclId: !Ref EC2NetworkAcl00acl0cfc643d8d0e79a3f002Cu8n
+      SubnetId: !Ref EC2Subnet00subnet007b07aa62aaf2aa300CZ1U7
+  EC2Subnet00subnet08ed0f8b075be842900440FV:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Subnet
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      MapPublicIpOnLaunch: false
+      EnableDns64: false
+      AvailabilityZoneId: apne2-az3
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: ip-name
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: 10.0.32.0/20
+      Ipv6Native: false
+      Tags:
+        - Value: eks-practice-pub02
+          Key: Name
+  EC2Subnet00subnet007b07aa62aaf2aa300CZ1U7:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Subnet
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      MapPublicIpOnLaunch: false
+      EnableDns64: false
+      AvailabilityZoneId: apne2-az1
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: ip-name
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: 10.0.16.0/20
+      Ipv6Native: false
+      Tags:
+        - Value: eks-practice-pub01
+          Key: Name
+  EC2SubnetNetworkAclAssociation00aclassoc076998876cad608af00BiAil:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    DeletionPolicy: Retain
+    Properties:
+      NetworkAclId: !Ref EC2NetworkAcl00acl0cfc643d8d0e79a3f002Cu8n
+      SubnetId: !Ref EC2Subnet00subnet0548a083f1b638c4a00TorbM
+  EC2NetworkAcl00acl0cfc643d8d0e79a3f002Cu8n:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::NetworkAcl
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      Tags: []
+  EC2NetworkInterface00eni0aebeeaf81ca8de7e00jRiHK:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::NetworkInterface
+    DeletionPolicy: Retain
+    Properties:
+      Description: Interface for NAT Gateway nat-03c777455828394c0
+      PrivateIpAddress: 10.0.38.106
+      PrivateIpAddresses:
+        - PrivateIpAddress: 10.0.38.106
+          Primary: true
+      SecondaryPrivateIpAddressCount: 0
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet: []
+      Ipv6Prefixes: []
+      SubnetId: !Ref EC2Subnet00subnet08ed0f8b075be842900440FV
+      SourceDestCheck: false
+      InterfaceType: 'null'
+      Tags: []
+  EC2VPCDHCPOptionsAssociation00vpc0908172863f95427800lBMv1:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::VPCDHCPOptionsAssociation
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      DhcpOptionsId: !Ref EC2DHCPOptions00dopt0d28ff6600b0Sdn
+  EC2Route00rtb032650838288a20b900UiflK:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Route
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb032650838288a20b900Cfpjg
+      DestinationCidrBlock: !GetAtt EC2VPC00vpc0908172863f95427800DPWAP.CidrBlock
+      GatewayId: local
+      VpcEndpointId: local
+  EC2Subnet00subnet0548a083f1b638c4a00TorbM:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Subnet
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      MapPublicIpOnLaunch: false
+      EnableDns64: false
+      AvailabilityZoneId: apne2-az3
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: ip-name
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: 10.0.80.0/20
+      Ipv6Native: false
+      Tags:
+        - Value: eks-practice-pri02
+          Key: Name
+  EC2NetworkInterface00eni052c04473bdc3711f00kEnrX:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::NetworkInterface
+    DeletionPolicy: Retain
+    Properties:
+      Description: Interface for NAT Gateway nat-086912ab949e3ca83
+      PrivateIpAddress: 10.0.18.177
+      PrivateIpAddresses:
+        - PrivateIpAddress: 10.0.18.177
+          Primary: true
+      SecondaryPrivateIpAddressCount: 0
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet: []
+      Ipv6Prefixes: []
+      SubnetId: !Ref EC2Subnet00subnet007b07aa62aaf2aa300CZ1U7
+      SourceDestCheck: false
+      InterfaceType: 'null'
+      Tags: []
+  EC2Route00rtb0470cb2d39aa8dda700KzdNW:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Route
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb0470cb2d39aa8dda700IXEQ3
+      DestinationCidrBlock: !GetAtt EC2VPC00vpc0908172863f95427800DPWAP.CidrBlock
+      GatewayId: local
+      VpcEndpointId: local
+  EC2RouteTable00rtb0470cb2d39aa8dda700IXEQ3:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::RouteTable
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref EC2VPC00vpc0908172863f95427800DPWAP
+      Tags:
+        - Value: eks-practice-rt-pri01
+          Key: Name
+  EC2VPC00vpc0908172863f95427800DPWAP:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::VPC
+    DeletionPolicy: Retain
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      EnableDnsHostnames: false
+      Tags:
+        - Value: eks-practice
+          Key: Name
+  EC2SubnetNetworkAclAssociation00aclassoc0ce5787b5e6331d2400b8W4n:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    DeletionPolicy: Retain
+    Properties:
+      NetworkAclId: !Ref EC2NetworkAcl00acl0cfc643d8d0e79a3f002Cu8n
+      SubnetId: !Ref EC2Subnet00subnet08ed0f8b075be842900440FV
+  EC2EIPAssociation00eipassoc0f74a39c007b1a9ec00WFVdN:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::EIPAssociation
+    DeletionPolicy: Retain
+    Properties:
+      PrivateIpAddress: !GetAtt EC2NetworkInterface00eni0aebeeaf81ca8de7e00jRiHK.PrimaryPrivateIpAddress
+      NetworkInterfaceId: !Ref EC2NetworkInterface00eni0aebeeaf81ca8de7e00jRiHK
+      EIP: !GetAtt EC2EIP00432009112600YhkvF.PublicIp
+      AllocationId: !GetAtt EC2EIP00432009112600YhkvF.AllocationId
+  EC2Route00rtb058a35d869e8ecebd00pqoAi:
+    UpdateReplacePolicy: Retain
+    Type: AWS::EC2::Route
+    DeletionPolicy: Retain
+    Properties:
+      RouteTableId: !Ref EC2RouteTable00rtb058a35d869e8ecebd00YQyuy
+      DestinationCidrBlock: !GetAtt EC2VPC00vpc0908172863f95427800DPWAP.CidrBlock
+      GatewayId: local
+      VpcEndpointId: local

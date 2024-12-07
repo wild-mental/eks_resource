@@ -1,9 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
+  CreatorName:
+    Type: String
+    Default: "Insert your IAM ID Here"
+
   ClusterBaseName:
     Type: String
     Default: eks-work
+
+  KeyPairName:
+    Type: String
+    Default: hanatutor
+    Description: "Name of an existing EC2 KeyPair to enable SSH access to the bastion host"
 
   TargetRegion:
     Type: String
@@ -37,15 +46,6 @@ Parameters:
     Type: String
     Default: 10.0.80.0/20
 
-  KeyPairName:
-    Type: String
-    Default: hanatutor
-    Description: "Name of an existing EC2 KeyPair to enable SSH access to the bastion host"
-
-  CreatorName:
-    Type: String
-    Default: "Insert your IAM ID Here"
-
 Resources:
   EksWorkVPC:
     Type: AWS::EC2::VPC
@@ -56,32 +56,6 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${ClusterBaseName}-VPC
-        - Key: Creator
-          Value: !Ref CreatorName
-
-  WorkerPublicSubnet1:
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: !Ref AvailabilityZone1
-      CidrBlock: !Ref WorkerPublicSubnet1Block
-      VpcId: !Ref EksWorkVPC
-      MapPublicIpOnLaunch: true
-      Tags:
-        - Key: Name
-          Value: !Sub ${ClusterBaseName}-WorkerPublicSubnet1
-        - Key: Creator
-          Value: !Ref CreatorName
-
-  WorkerPrivateSubnet1:
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: !Ref AvailabilityZone1
-      CidrBlock: !Ref WorkerPrivateSubnet1Block
-      VpcId: !Ref EksWorkVPC
-      MapPublicIpOnLaunch: false
-      Tags:
-        - Key: Name
-          Value: !Sub ${ClusterBaseName}-WorkerPrivateSubnet1
         - Key: Creator
           Value: !Ref CreatorName
 
@@ -100,6 +74,54 @@ Resources:
       InternetGatewayId: !Ref InternetGateway
       VpcId: !Ref EksWorkVPC
 
+  NATGatewayEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: !Sub ${ClusterBaseName}-NATGatewayEIP
+        - Key: Creator
+          Value: !Ref CreatorName
+
+  NATGateway:
+    DependsOn: VPCGatewayAttachment
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NATGatewayEIP.AllocationId
+      SubnetId: !Ref WorkerPublicSubnet1
+      Tags:
+        - Key: Name
+          Value: !Sub ${ClusterBaseName}-NATGateway
+        - Key: Creator
+          Value: !Ref CreatorName
+
+  WorkerPublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone1
+      CidrBlock: !Ref WorkerPublicSubnet1Block
+      VpcId: !Ref EksWorkVPC
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${ClusterBaseName}-WorkerPublicSubnet1
+        - Key: Creator
+          Value: !Ref CreatorName
+
+  WorkerPublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone2
+      CidrBlock: !Ref WorkerPublicSubnet2Block
+      VpcId: !Ref EksWorkVPC
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${ClusterBaseName}-WorkerPublicSubnet2
+        - Key: Creator
+          Value: !Ref CreatorName
+
   PublicSubnetRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -117,30 +139,41 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
-  PublicSubnetRouteTableAssociation:
+  PublicSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref WorkerPublicSubnet1
       RouteTableId: !Ref PublicSubnetRouteTable
 
-  NATGatewayEIP:
-    Type: AWS::EC2::EIP
+  PublicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      Domain: vpc
+      SubnetId: !Ref WorkerPublicSubnet2
+      RouteTableId: !Ref PublicSubnetRouteTable
+
+  WorkerPrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone1
+      CidrBlock: !Ref WorkerPrivateSubnet1Block
+      VpcId: !Ref EksWorkVPC
+      MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${ClusterBaseName}-NATGatewayEIP
+          Value: !Sub ${ClusterBaseName}-WorkerPrivateSubnet1
         - Key: Creator
           Value: !Ref CreatorName
 
-  NATGateway:
-    Type: AWS::EC2::NatGateway
+  WorkerPrivateSubnet2:
+    Type: AWS::EC2::Subnet
     Properties:
-      AllocationId: !GetAtt NATGatewayEIP.AllocationId
-      SubnetId: !Ref WorkerPublicSubnet1
+      AvailabilityZone: !Ref AvailabilityZone2
+      CidrBlock: !Ref WorkerPrivateSubnet2Block
+      VpcId: !Ref EksWorkVPC
+      MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${ClusterBaseName}-NATGateway
+          Value: !Sub ${ClusterBaseName}-WorkerPrivateSubnet2
         - Key: Creator
           Value: !Ref CreatorName
 
@@ -150,7 +183,7 @@ Resources:
       VpcId: !Ref EksWorkVPC
       Tags:
         - Key: Name
-          Value: !Sub ${ClusterBaseName}-PrivateRouteTable
+          Value: !Sub ${ClusterBaseName}-PrivateRouteTable1
         - Key: Creator
           Value: !Ref CreatorName
   
@@ -161,10 +194,16 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref NATGateway
 
-  PrivateSubnetRouteTableAssociation:
+  PrivateSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref WorkerPrivateSubnet1
+      RouteTableId: !Ref PrivateSubnetRouteTable
+
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref WorkerPrivateSubnet2
       RouteTableId: !Ref PrivateSubnetRouteTable
 
   BastionHost:
@@ -202,14 +241,23 @@ Outputs:
   VPCId:
     Value: !Ref EksWorkVPC
 
-  PublicSubnet:
+  PublicSubnet1:
     Value: !Ref WorkerPublicSubnet1
 
-  PrivateSubnet:
+  PublicSubnet2:
+    Value: !Ref WorkerPublicSubnet2
+
+  PrivateSubnet1:
     Value: !Ref WorkerPrivateSubnet1
+
+  PrivateSubnet2:
+    Value: !Ref WorkerPrivateSubnet2
 
   BastionHostId:
     Value: !Ref BastionHost
+
+  BastionHostPublicIP:
+    Value: !GetAtt BastionHost.PublicIp
 
   NATGatewayId:
     Value: !Ref NATGateway

@@ -7,7 +7,7 @@ Parameters:
 
   ClusterBaseName:
     Type: String
-    Default: eks-work
+    Default: eks-base0
 
   KeyPairName:
     Type: String

@@ -1,0 +1,29 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: sampleClusterYaml
+  region: ap-northeast-2
+  version: "1.31"
+
+vpc:
+  subnets:
+    public:
+      ap-northeast-2a:
+        id: subnet-02c214668dddcdadd
+      ap-northeast-2b:
+        id: subnet-04d360378b2036f22
+    private:
+      ap-northeast-2a:
+        id: subnet-0dc763164f8def262
+      ap-northeast-2b:
+        id: subnet-0028e495334d5ae4e
+  securityGroup: sg-0ab5bc2bc88717d8b
+
+nodeGroups:
+  - name: sampleCluster-ng
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
+    amiFamily: AmazonLinux2

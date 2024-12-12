@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: sampleCluster00Yaml
+  name: eks-cluster0
   region: ap-northeast-2
   version: "1.31"
 
@@ -10,17 +10,17 @@ vpc:
   subnets:
     public:
       ap-northeast-2a:
-        id: subnet-0f662afb4ea34b6c8
+        id: subnet-03a152f4da858cb21
       ap-northeast-2c:
-        id: subnet-095dfb378e21be043
+        id: subnet-037c0459e77fe1a1c
     private:
       ap-northeast-2a:
-        id: subnet-0c4c0342888affbee
+        id: subnet-0b24dde45eadbf699
       ap-northeast-2c:
-        id: subnet-0345cef08559a5592
+        id: subnet-03cebf3d0206398d8
 
 managedNodeGroups:
-  - name: sampleCluster-ng
+  - name: eks-cluster0-ng0
     instanceType: t3.medium
     desiredCapacity: 2
     minSize: 2

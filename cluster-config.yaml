@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: sampleClusterYaml
+  name: sampleCluster00Yaml
   region: ap-northeast-2
   version: "1.31"
 
@@ -10,17 +10,16 @@ vpc:
   subnets:
     public:
       ap-northeast-2a:
-        id: subnet-02c214668dddcdadd
-      ap-northeast-2b:
-        id: subnet-04d360378b2036f22
+        id: subnet-0f662afb4ea34b6c8
+      ap-northeast-2c:
+        id: subnet-095dfb378e21be043
     private:
       ap-northeast-2a:
-        id: subnet-0dc763164f8def262
-      ap-northeast-2b:
-        id: subnet-0028e495334d5ae4e
-  securityGroup: sg-0ab5bc2bc88717d8b
+        id: subnet-0c4c0342888affbee
+      ap-northeast-2c:
+        id: subnet-0345cef08559a5592
 
-nodeGroups:
+managedNodeGroups:
   - name: sampleCluster-ng
     instanceType: t3.medium
     desiredCapacity: 2

@@ -9,11 +9,6 @@ Parameters:
     Type: String
     Default: eks-base0
 
-  KeyPairName:
-    Type: String
-    Default: hanatutor
-    Description: "Name of an existing EC2 KeyPair to enable SSH access to the bastion host"
-
   TargetRegion:
     Type: String
     Default: ap-northeast-2

@@ -7,7 +7,7 @@ Parameters:
 
   ClusterBaseName:
     Type: String
-    Default: eks-base0
+    Default: eks-base00
 
   TargetRegion:
     Type: String

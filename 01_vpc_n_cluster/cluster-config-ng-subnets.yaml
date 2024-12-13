@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: eks-cluster0
+  name: eks-cluster00
   region: ap-northeast-2
   version: "1.31"
 
@@ -20,7 +20,7 @@ vpc:
         id: subnet-03cebf3d0206398d8
 
 managedNodeGroups:
-  - name: eks-clstr0-pub-ng
+  - name: eks-clstr00-pub-ng
     instanceType: t3.medium
     desiredCapacity: 2
     minSize: 1
@@ -29,7 +29,7 @@ managedNodeGroups:
     subnets:
       - subnet-03a152f4da858cb21
       - subnet-037c0459e77fe1a1c
-  - name: eks-clstr0-prv-ng
+  - name: eks-clstr00-prv-ng
     instanceType: t3.medium
     desiredCapacity: 2
     minSize: 1
@@ -38,3 +38,4 @@ managedNodeGroups:
     subnets:
       - subnet-0b24dde45eadbf699
       - subnet-03cebf3d0206398d8
+

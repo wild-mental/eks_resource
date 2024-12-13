@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev-backend-review
+  name: msa-review
+  labels:
+    app: msa-review
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msa-review
+  template:
+    metadata:
+      labels:
+        app: msa-review
+    spec:
+      containers:
+      - name: msa-review
+        image: makersworld/msa_svc_review:aws_amd64
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_HOST            # DB NodePortService의 FQDN
+          value: "msa-db-service.dev-db.svc.cluster.local"
+        - name: DB_PORT
+          value: "3306"            # MySQL 포트
+        - name: DB_USER
+          value: "root"            # MySQL 사용자 이름
+        - name: DB_PASS
+          value: "12341234"        # MySQL 비밀번호
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: dev-backend-review
+  name: msa-review-service
+  labels:
+    app: msa-review
+spec:
+  type: LoadBalancer
+  selector:
+    app: msa-review
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+

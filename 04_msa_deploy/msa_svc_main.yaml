@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev-backend-main
+  name: msa-main
+  labels:
+    app: msa-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msa-main
+  template:
+    metadata:
+      labels:
+        app: msa-main
+    spec:
+      containers:
+      - name: msa-main
+        image: makersworld/msa_svc_main:aws_amd64
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_HOST
+          value: "msa-db-service.dev-db.svc.cluster.local"
+        - name: DB_PORT
+          value: "3306"            # MySQL 포트
+        - name: DB_USER
+          value: "root"            # MySQL 사용자 이름
+        - name: DB_PASS
+          value: "12341234"        # MySQL 비밀번호
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: dev-backend-main
+  name: msa-main-service
+  labels:
+    app: msa-main
+spec:
+  type: LoadBalancer
+  selector:
+    app: msa-main
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+

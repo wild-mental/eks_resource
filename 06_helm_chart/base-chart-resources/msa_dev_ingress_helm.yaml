@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: msa-ingress
+  name: msa-ingress-helm
   namespace: ingress-nginx
   annotations:
     # 아래 설정 시 kubectl logs -n ingress-nginx -l app=ingress-nginx 로 로그 조회 가능
@@ -15,20 +15,20 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: msa-main-service
+            name: msa-main-helm-service
             port:
               number: 80
       - path: /api/v1/users
         pathType: Prefix
         backend:
           service:
-            name: msa-user-service
+            name: msa-user-helm-service
             port:
               number: 80
       - path: /api/v1/reviews
         pathType: Prefix
         backend:
           service:
-            name: msa-review-service
+            name: msa-review-helm-service
             port:
               number: 80

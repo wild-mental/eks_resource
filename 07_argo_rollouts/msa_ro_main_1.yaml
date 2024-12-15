@@ -1,6 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
+  namespace: dev-backend-main
   name: msa-main-canary          # Rollout 리소스 이름
 spec:
   replicas: 10                   # 유지할 Pod 복제본 수
@@ -44,7 +45,7 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: dev-backend-main
-  name: msa-main-service
+  name: msa-main-helm-service
   labels:
     app: msa-main
 spec:

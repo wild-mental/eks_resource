@@ -1,6 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
+  namespace: dev-backend-main
   name: msa-main-canary          # Rollout 리소스 이름
 spec:
   replicas: 10                   # 유지할 Pod 복제본 수
@@ -14,9 +15,9 @@ spec:
         app: msa-main            # Pod에 붙을 앱 이름
     spec:
       containers:
-      - name: msa-main  
+      - name: msa-main
         image: makersworld/msa_svc_main:cicd_amd64
-        imagePullPolicy: Always 
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:
@@ -29,7 +30,7 @@ spec:
         - name: DB_PASS
           value: "12341234"        # MySQL 비밀번호
   strategy:
-    canary: 
+    canary:
       steps:                      # 배포 단계별 트래픽 비율과 동작 정의
       - setWeight: 20             # 새 버전(canary)에 20%의 트래픽 전달
       - pause: {}                 # 사용자의 수동 프로모션을 무기한 대기
@@ -44,7 +45,7 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: dev-backend-main
-  name: msa-main-service
+  name: msa-main-helm-service
   labels:
     app: msa-main
 spec:

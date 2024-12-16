@@ -1,0 +1,28 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-cluster000
+  region: ap-northeast-2
+  version: "1.31"
+
+vpc:
+  subnets:
+    public:
+      ap-northeast-2a:
+        id: subnet-043b2924f5e95e9ee
+      ap-northeast-2c:
+        id: subnet-08706279d19f35c4d
+    private:
+      ap-northeast-2a:
+        id: subnet-0ce212830cfcef2e6
+      ap-northeast-2c:
+        id: subnet-0a93c45487480fcee
+
+managedNodeGroups:
+  - name: eks-cluster000-ng000
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
+    amiFamily: AmazonLinux2

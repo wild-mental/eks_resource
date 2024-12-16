@@ -1,0 +1,28 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-cluster-sydney
+  region: ap-southeast-2
+  version: "1.31"
+
+vpc:
+  subnets:
+    public:
+      ap-southeast-2a:
+        id: subnet-0115abed1e2ce1c3b
+      ap-southeast-2b:
+        id: subnet-015bee3fa14233990
+    private:
+      ap-southeast-2a:
+        id: subnet-0ad7b7c80957c0b5b
+      ap-southeast-2b:
+        id: subnet-048b5d57bd6a5c6d5
+
+managedNodeGroups:
+  - name: eks-cluster-sydney-ng0
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
+    amiFamily: AmazonLinux2

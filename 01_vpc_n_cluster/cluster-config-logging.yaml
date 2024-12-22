@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: eks-monitor-clstr
+  name: eks-monitor-clstr0
   region: ap-northeast-2
   version: "1.31"
 
@@ -19,8 +19,15 @@ vpc:
       ap-northeast-2c:
         id: subnet-062fe56f44c5e487a
 
+iam:
+  withOIDC: true
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
 managedNodeGroups:
-  - name: eks-clstr-ng1
+  - name: eks-clstr0-ng1
     instanceType: t3.medium
     desiredCapacity: 2
     minSize: 2

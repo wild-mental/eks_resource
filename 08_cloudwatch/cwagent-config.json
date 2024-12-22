@@ -1,0 +1,12 @@
+{
+  "logs": {
+    "metrics_collected": {
+      "kubernetes": {
+        "cluster_name": "eks-monitor-clstr0",
+        "metrics_collection_interval": 60,
+        "log_group_name": "/aws/eks/eks-monitor-clstr0/logs"
+      }
+    }
+  }
+}
+
